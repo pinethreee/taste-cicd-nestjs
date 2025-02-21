@@ -19,7 +19,7 @@ jobs:
         pnpm-version: [10]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: .env.dev
         run: |
@@ -94,6 +94,8 @@ jobs:
     needs: [publish]
     runs-on: self-hosted
     steps:
+      - uses: actions/checkout@v4
+
       - name: Log in to the Container registry
         uses: docker/login-action@v2
         with:
