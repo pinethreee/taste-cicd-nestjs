@@ -9,6 +9,7 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
+  PROJECT_ID: timblo-bo
 
 jobs:
   verify:
@@ -95,10 +96,12 @@ jobs:
         
       - name: Stop existing container
         run: |
-          docker stop taste-cicd-nestjs || true
-          docker rm taste-cicd-nestjs || true
+          IS_HEALTHY=$(docker inspect --format='{{.State.Health.Status}}' ${{ env.PROJECT_ID }})
+
+          echo "Service is... ${IS_HEALTHY}"
+          docker rm -f ${{ env.PROJECT_ID }} || true
         continue-on-error: true
-        
-      - name: Run new container
+
+      - name: Run container
         run: |
-          docker run -d --name taste-cicd-nestjs -p 3001:3000 ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          docker run -d --name ${{ env.PROJECT_ID }} -p 3000:3000 ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest

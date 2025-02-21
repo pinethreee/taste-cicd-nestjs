@@ -23,4 +23,7 @@ COPY --from=builder /build/.env .
 
 RUN npm install
 
+HEALTHCHECK --interval=20s --timeout=5s --retries=3 \
+  CMD wget -q --spider localhost:3000/examples || exit 1
+
 CMD ["node", "dist/src/main"]
