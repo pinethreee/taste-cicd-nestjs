@@ -22,7 +22,7 @@ async function bootstrap() {
   );
 
   const config = new DocumentBuilder()
-    .setTitle(process.env.PROJECT_NAME!)
+    .setTitle(process.env.PROJECT_TITLE!)
     .setDescription(process.env.PROJECT_DESCRIPTION!)
     .setVersion('1.0')
     .addBearerAuth()

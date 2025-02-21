@@ -6,8 +6,8 @@ WORKDIR /build
 
 COPY . .
 
-# RUN pnpm install
-# RUN pnpm build
+RUN pnpm install
+RUN pnpm build
 
 # Runner stage
 FROM node:22-alpine AS runner
@@ -16,12 +16,11 @@ EXPOSE 3000
 
 WORKDIR /app
 
-# COPY --from=builder /build/dist ./dist
-# COPY --from=builder /build/package.json ./
-# COPY --from=builder /build/pnpm-lock.yaml ./
-#
-# RUN npm install
+COPY --from=builder /build/dist ./dist
+COPY --from=builder /build/package.json .
+COPY --from=builder /build/pnpm-lock.yaml .
+COPY --from=builder /build/.env .
 
-ENV NODE_ENV=dev
+RUN npm install
 
-CMD ["node"]
+CMD ["node", "dist/src/main"]

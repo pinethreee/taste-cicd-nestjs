@@ -11,7 +11,7 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  build:
+  verify:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -20,15 +20,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
-      - name: .env.dev
-        run: |
-          echo "DB_TYPE=\"${{ secrets.DB_TYPE }}\" > .env.dev
-          echo "DB_HOST=\"${{ secrets.DB_HOST }}\" >> .env.dev
-          echo "DB_PORT=\"${{ secrets.DB_PORT }}\" >> .env.dev
-          echo "DB_USERNAME=\"${{ secrets.DB_USERNAME }}\" >> .env.dev
-          echo "DB_PASSWORD=\"${{ secrets.DB_PASSWORD }}\" >> .env.dev
-          echo "DB_DATABASE=\"${{ secrets.DB_DATABASE }}\" >> .env.dev
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
@@ -54,22 +45,18 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
 
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Build project
-        run: pnpm build
+      # - name: Install dependencies
+      #  run: pnpm install --frozen-lockfile
 
   wait-for-approval:
-    needs: build
+    needs: verify
     runs-on: ubuntu-latest
     environment: 'dev'
     steps:
       - name: Waiting for approval
         run: echo "Approved by us"
 
-  publish:
+  build:
     needs: wait-for-approval
     runs-on: ubuntu-latest
     permissions:
@@ -93,7 +80,7 @@ jobs:
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
 
   deploy:
-    needs: [publish]
+    needs: [build]
     runs-on: self-hosted
     steps:
       - name: Log in to the Container registry
