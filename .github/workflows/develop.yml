@@ -80,3 +80,35 @@ jobs:
           context: .
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+
+  wait-for-approval:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: 'dev'
+    steps:
+      - name: Waiting for approval
+        run: echo "Approved by us"
+
+  deploy:
+    needs: [wait-for-approval]
+    runs-on: self-hosted
+    steps:
+      - name: Log in to the Container registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+        
+      - name: Pull latest image
+        run: docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+        
+      - name: Stop existing container
+        run: |
+          docker stop taste-cicd-nestjs || true
+          docker rm taste-cicd-nestjs || true
+        continue-on-error: true
+        
+      - name: Run new container
+        run: |
+          docker run -d --name taste-cicd-nestjs -p 3001:3000 ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
