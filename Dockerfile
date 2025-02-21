@@ -23,4 +23,4 @@ COPY --from=builder /build/pnpm-lock.yaml ./
 RUN npm install
 
 ENV NODE_ENV=dev
-CMD ["node", "dist/src/main"]
+CMD ["node"]
