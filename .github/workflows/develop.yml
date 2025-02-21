@@ -63,7 +63,7 @@ jobs:
 
   publish:
     needs: build
-    run-on: ubuntu-latest
+    runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
