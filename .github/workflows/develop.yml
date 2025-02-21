@@ -37,7 +37,7 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
-          version: {{ matrix.pnpm-version }}
+          version: ${{ matrix.pnpm-version }}
           run_install: false
 
       - name: Setup Node.js
