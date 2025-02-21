@@ -22,8 +22,8 @@ async function bootstrap() {
   );
 
   const config = new DocumentBuilder()
-    .setTitle('문서 제목')
-    .setDescription('문서 설명')
+    .setTitle(process.env.PROJECT_NAME!)
+    .setDescription(process.env.PROJECT_DESCRIPTION!)
     .setVersion('1.0')
     .addBearerAuth()
     .addBasicAuth()

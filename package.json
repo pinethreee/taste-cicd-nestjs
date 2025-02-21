@@ -1,5 +1,5 @@
 {
-  "name": "nestjs-skeleton",
+  "name": "timbel-bo",
   "version": "0.0.1",
   "description": "",
   "author": "",
@@ -8,10 +8,10 @@
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "nest start",
-    "start:dev": "nest start --watch",
-    "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/main",
+    "start": "npx cross-env NODE_ENV=dev nest start",
+    "start:dev": "npx cross-env NODE_ENV=dev nest start --watch",
+    "start:debug": "npx cross-env NODE_ENV=dev nest start --debug --watch",
+    "start:prod": "npx cross-env NODE_ENV=prod node dist/src/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
